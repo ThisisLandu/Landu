@@ -1,0 +1,53 @@
+# if you import only one TFRecord file
+
+import tensorflow as tf
+import os
+import time
+import numpy as np
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+
+batch_size = 20
+
+def train_input_fn():
+    return input_fn(filenames=["train.tfrecord"])
+
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+
+def input_fn(filenames):
+    dataset = tf.data.TFRecordDataset(filenames=filenames, num_parallel_reads=40)
+    dataset = dataset.apply(tf.data.experimental.shuffle_and_repeat(1024, 1))
+
+    def parser(record):
+        keys_to_features = {
+            "image_raw": tf.FixedLenFeature([], tf.string),
+            "label": tf.FixedLenFeature([], tf.int64)
+        }
+        parsed = tf.parse_single_example(record, keys_to_features)
+        image = tf.decode_raw(parsed["image_raw"], tf.uint8)
+        image = tf.cast(image, tf.float32)
+        label = tf.cast(parsed["label"], tf.int32)
+
+        return image, label
+
+    dataset = dataset.apply(tf.data.experimental.map_and_batch(parser, batch_size))
+    dataset = dataset.prefetch(buffer_size=2)
+    iterator = dataset.make_initializable_iterator()
+
+    return iterator
+
+iterator = train_input_fn()
+
+for i in range(3):
+    sess.run(iterator.initializer)    
+    next_element = iterator.get_next()
+    for j in range(100):
+        # skip last batch, because last batch doesn't have enough data like others
+        # if you want last batch, just erase try syntax
+        try:            
+            a, b = sess.run(next_element)
+            print(a)
+        except tf.errors.OutOfRangeError:
+            print(i, 'times')
+            break
+    print('============')
