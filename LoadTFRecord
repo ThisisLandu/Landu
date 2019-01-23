@@ -11,8 +11,8 @@ batch_size = 20
 def train_input_fn():
     return input_fn(filenames=["train.tfrecord"])
 
-sess = tf.Session()
-sess.run(tf.global_variables_initializer())
+def val_input_fn():
+    return input_fn(filenames=["val.tfrecord"])
 
 def input_fn(filenames):
     dataset = tf.data.TFRecordDataset(filenames=filenames, num_parallel_reads=40)
@@ -36,18 +36,32 @@ def input_fn(filenames):
 
     return iterator
 
-iterator = train_input_fn()
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
 
-for i in range(3):
-    sess.run(iterator.initializer)    
-    next_element = iterator.get_next()
+train_iterator = train_input_fn()
+val_iterator = val_input_fn()
+
+for i in range(2):
+    sess.run(train_iterator.initializer)
+    next_element = train_iterator.get_next()
     for j in range(100):
-        # skip last batch, because last batch doesn't have enough data like others
-        # if you want last batch, just erase try syntax
-        try:            
-            a, b = sess.run(next_element)
-            print(a)
+        try:
+            image, label = sess.run(next_element)
+            print(label)
         except tf.errors.OutOfRangeError:
-            print(i, 'times')
+            print('train')
             break
     print('============')
+
+    sess.run(val_iterator.initializer)
+    next_element = val_iterator.get_next()
+
+    for j in range(100):
+        try:
+            a, b = sess.run(next_element)
+            print(label)
+        except tf.errors.OutOfRangeError:
+            print('val')
+            break
+    print('==========================================')
