@@ -1,4 +1,4 @@
-# if you import only one TFRecord file
+# if you use estimator, you don't need use iterator
 
 # Reference : https://youtu.be/bqeUmLCgsVw
 # Reference : https://www.tensorflow.org/api_docs/python/tf/data/Iterator
