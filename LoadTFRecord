@@ -1,4 +1,4 @@
-# if you use estimator, you don't need use iterator
+# if you use estimator, you don't need to use iterator
 
 # Reference : https://youtu.be/bqeUmLCgsVw
 # Reference : https://www.tensorflow.org/api_docs/python/tf/data/Iterator
