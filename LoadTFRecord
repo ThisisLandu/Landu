@@ -1,5 +1,9 @@
 # if you import only one TFRecord file
 
+# Reference : https://youtu.be/bqeUmLCgsVw
+# Reference : https://www.tensorflow.org/api_docs/python/tf/data/Iterator
+# Reference : https://medium.com/ymedialabs-innovation/how-to-use-dataset-and-iterators-in-tensorflow-with-code-samples-3bb98b6b74ab
+
 import tensorflow as tf
 import os
 import time
@@ -25,8 +29,8 @@ def input_fn(filenames):
         }
         parsed = tf.parse_single_example(record, keys_to_features)
         image = tf.decode_raw(parsed["image_raw"], tf.uint8)
-        image = tf.cast(image, tf.float32)
-        label = tf.cast(parsed["label"], tf.int32)
+        image = tf.cast(image, tf.float32)                  # change datatype of image to float32
+        label = tf.cast(parsed["label"], tf.int32)          # change datatype of label to int32
 
         return image, label
 
