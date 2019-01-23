@@ -9,7 +9,7 @@ import tensorflow as tf
 # Reference : https://youtu.be/bqeUmLCgsVw
 # Reference : https://www.tensorflow.org/api_docs/python/tf/data/Iterator
 # Reference : https://medium.com/ymedialabs-innovation/how-to-use-dataset-and-iterators-in-tensorflow-with-code-samples-3bb98b6b74ab
-
+# Reference : https://www.tensorflow.org/guide/datasets
 
 resized_image_H = 64
 resized_image_W = 64
